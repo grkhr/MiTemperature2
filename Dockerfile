@@ -12,13 +12,15 @@ RUN sudo apt-get update
 
 RUN sudo apt-get -y --no-install-recommends install python-pip libglib2.0-dev
 
+COPY . .
+
 RUN /usr/local/bin/pip3.7 install bluepy
 RUN /usr/local/bin/pip3.7 install requests
 RUN pip install -r requirements.txt
 
 #COPY LYWSD03MMC.py LYWSD03MMC.py 
 #COPY sendtovera.py sendtovera.py 
-COPY . .
+
 
 RUN service dbus start
 
