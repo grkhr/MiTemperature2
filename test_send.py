@@ -1,2 +1,2 @@
 import sys
-print('ahahahhhah')
+print('argv1', sys.argv[1])
