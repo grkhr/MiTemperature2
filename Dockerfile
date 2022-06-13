@@ -13,6 +13,7 @@ RUN sudo apt-get update
 RUN sudo apt-get -y --no-install-recommends install python-pip libglib2.0-dev
 
 COPY . .
+RUN python --version
 
 RUN /usr/local/bin/pip3.7 install bluepy
 RUN /usr/local/bin/pip3.7 install requests
