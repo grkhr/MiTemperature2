@@ -14,7 +14,9 @@ bot = telebot.TeleBot(os.getenv('TELEGRAM_BOT_TOKEN'))
 COMMANDS = {
     'current': 'current',
     'get_config': 'get_config',
-    'change_config': 'change config'
+    'change_config': 'change config',
+    'last_logs': 'last_logs',
+    'logs_stat': 'logs_stat'
 }
 bot.set_my_commands([telebot.types.BotCommand(k, v) for k, v in COMMANDS.items()])
 
@@ -30,14 +32,35 @@ def current(message):
     current = helpers.find_state(-1)
     text = helpers.format_state(current)
     return bot.reply_to(message, text)
-    
+
+@bot.message_handler(commands=['last_logs'])
+def get_config(message):
+    ls = helpers.find_last_n_states(10)
+    ls = [
+        [
+            helpers.stringify_ts(i['timestamp']), 
+            str(i['temperature']), 
+            str(i['humidity'])
+        ] 
+        for i in ls
+    ]
+    ls = '\n'.join([' '.join(i) for i in ls])
+    return bot.reply_to(message, f'`{ls}`', parse_mode='markdown')
+
+@bot.message_handler(commands=['logs_stat'])
+def send_logs_stat(message):
+    stat = helpers.logs_stat()
+    print(stat)
+    return bot.reply_to(message, f'```\n{pprint.pformat(stat, indent=1, width=1)}\n```', parse_mode='markdown')
+
 
 @bot.message_handler(commands=['get_config'])
 def get_config(message):
     with open('config.json') as f:
         config = json.loads(f.read())
     config = {k:v['value'] for k, v in config.items()}
-    return bot.reply_to(message, f'`{pprint.pformat(config, sort_dicts=False)}`', parse_mode='markdown')
+    return bot.reply_to(message, f'`{pprint.pformat(config, sort_dicts=False, indent=1, width=1)}`', parse_mode='markdown')
+
 
 @bot.message_handler(commands=['change_config'])
 def start_change_config(message):
