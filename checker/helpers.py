@@ -16,7 +16,7 @@ def format_state(state):
     dtm = datetime.datetime.fromtimestamp(state['timestamp']).strftime('%d %b %H:%M')
     text = [
         f"{dtm} UTC",
-        f"{state['temperature']}C - temperature",
+        f"{state['temperature']}°C - temperature",
         f"{state['humidity']}% - humidity",
     ]
     return '\n'.join(text)
