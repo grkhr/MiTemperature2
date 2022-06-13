@@ -1,3 +1,8 @@
+import sys
+obj = sys.argv[1]
+with open('data.jsonl', 'a') as f:
+    f.write(obj + '\n')
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -35,3 +40,5 @@ if current_state['temperature'] < config['min_temperature'] and last_state['temp
 if current_state['temperature'] > config['max_temperature'] and last_state['temperature'] <= config['max_temperature']:
     text = f"🥵 Temperature is {current_state['temperature']}°C"
     bot.send_message(os.getenv('CHAT_ID'), text)
+
+print('checked')
