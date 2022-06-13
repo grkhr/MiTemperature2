@@ -20,3 +20,7 @@ def format_state(state):
         f"{state['humidity']}% - humidity",
     ]
     return '\n'.join(text)
+
+def sort_config(config):
+    return dict(sorted(config.items(), key=lambda x: x[1]['sort']))
+
