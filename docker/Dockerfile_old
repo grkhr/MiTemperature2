@@ -16,7 +16,7 @@ RUN /usr/local/bin/pip3.7 install requests
 COPY LYWSD03MMC.py LYWSD03MMC.py 
 COPY sendtovera.py sendtovera.py 
 
-ENTRYPOINT service dbus start
+RUN service dbus start
 
 #Change to the following line to match your needs
 
