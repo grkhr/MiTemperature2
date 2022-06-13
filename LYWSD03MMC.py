@@ -136,7 +136,7 @@ def thread_SendingData():
 							"timestamp": mea.timestamp
 						}
 						obj = json.dumps(obj)
-						cmd = path + "/" + args.callback + " " + obj
+						cmd = '.' + path + "/" + args.callback + " " + obj
 						print(cmd)
 						ret = os.system(cmd)
 					else:
