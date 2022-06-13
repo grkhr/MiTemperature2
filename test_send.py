@@ -1,2 +1,4 @@
 import sys
-print('argv1', sys.argv[1])
+obj = sys.argv[1]
+with open('data.jsonl', 'a') as f:
+    f.write(obj + '\n')

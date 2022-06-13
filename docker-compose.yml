@@ -6,5 +6,6 @@ services:
       context: "."
       dockerfile: Dockerfile
     platform: linux/arm64/v8
+    network_mode: "host"
     restart: always
 

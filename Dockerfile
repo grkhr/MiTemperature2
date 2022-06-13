@@ -1,6 +1,11 @@
 # Start from a Python3.7 base image I published
 
-FROM xavierrrr/xrrzero:stretchpython3.7 as mi2
+
+FROM python:3.9-slim AS mi2
+
+RUN apt-get update && \
+	apt-get install gcc build-essential dbus -y && \
+	apt-get clean
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
@@ -8,15 +13,23 @@ ENV LANG C.UTF-8
 # ENV PYTHONFAULTHANDLER=1
 ENV PYTHONUNBUFFERED=1
 
-RUN sudo apt-get update
+RUN apt-get -y --no-install-recommends install libglib2.0-dev
 
-RUN sudo apt-get -y --no-install-recommends install python-pip libglib2.0-dev
+#RUN which python
+#RUN which pip
 
 COPY . .
-RUN python --version
+# RUN sudo update-alternatives --install /usr/bin/python python /usr/local/bin/python3.7m 10
+#RUN sudo update-alternatives --install /usr/bin/pip pip /usr/local/bin/pip3.7 10
 
-RUN /usr/local/bin/pip3.7 install bluepy
-RUN /usr/local/bin/pip3.7 install requests
+RUN which python
+RUN which pip
+
+RUN python --version
+RUN pip --version
+
+RUN pip install bluepy
+RUN pip install requests
 RUN pip install -r requirements.txt
 
 #COPY LYWSD03MMC.py LYWSD03MMC.py 
