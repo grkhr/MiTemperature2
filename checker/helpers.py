@@ -4,10 +4,10 @@ import datetime
 
 FILENAME = 'data.jsonl'
 
-def find_current_state():
+def find_state(idx):
     if os.path.exists(FILENAME):
         with open(FILENAME) as f:
-            state = f.readlines()[-1]
+            state = f.readlines()[idx]
         return json.loads(state)
 
 def format_state(state):
