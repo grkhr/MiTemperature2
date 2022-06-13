@@ -127,26 +127,39 @@ def thread_SendingData():
 			if invokeCallback:
 
 				if args.callback:
-					fmt = "sensorname,temperature,humidity,voltage" #don't try to separate by semicolon ';' os.system will use that as command separator
-					if ' ' in mea.sensorname:
-						sensorname = '"' + mea.sensorname + '"'
+					if args.json:
+						obj = {
+							"sensorname": mea.sensorname,
+							"temperature": mea.temperature,
+							"humidity": mea.humidity,
+							"voltage": mea.voltage,
+							"timestamp": mea.timestamp
+						}
+						obj = json.dumps(obj)
+						cmd = path + "/" + args.callback + " " + obj
+						print(cmd)
+						ret = os.system(cmd)
 					else:
-						sensorname = mea.sensorname
-					params = sensorname + " " + str(mea.temperature) + " " + str(mea.humidity) + " " + str(mea.voltage)
-					if (args.TwoPointCalibration or args.offset): #would be more efficient to generate fmt only once
-						fmt +=",humidityCalibrated"
-						params += " " + str(mea.calibratedHumidity)
-					if (args.battery):
-						fmt +=",batteryLevel"
-						params += " " + str(mea.battery)
-					if (args.rssi):
-						fmt +=",rssi"
-						params += " " + str(mea.rssi)
-					params += " " + str(mea.timestamp)
-					fmt +=",timestamp"
-					cmd = path + "/" + args.callback + " " + fmt + " " + params
-					print(cmd)
-					ret = os.system(cmd)
+						fmt = "sensorname,temperature,humidity,voltage" #don't try to separate by semicolon ';' os.system will use that as command separator
+						if ' ' in mea.sensorname:
+							sensorname = '"' + mea.sensorname + '"'
+						else:
+							sensorname = mea.sensorname
+						params = sensorname + " " + str(mea.temperature) + " " + str(mea.humidity) + " " + str(mea.voltage)
+						if (args.TwoPointCalibration or args.offset): #would be more efficient to generate fmt only once
+							fmt +=",humidityCalibrated"
+							params += " " + str(mea.calibratedHumidity)
+						if (args.battery):
+							fmt +=",batteryLevel"
+							params += " " + str(mea.battery)
+						if (args.rssi):
+							fmt +=",rssi"
+							params += " " + str(mea.rssi)
+						params += " " + str(mea.timestamp)
+						fmt +=",timestamp"
+						cmd = path + "/" + args.callback + " " + fmt + " " + params
+						print(cmd)
+						ret = os.system(cmd)
 
 				if args.httpcallback:
 					url = args.httpcallback.format(
@@ -357,6 +370,7 @@ complexCalibrationGroup.add_argument("--offset2","-o2", help="Enter the offset f
 
 callbackgroup = parser.add_argument_group("Callback related arguments")
 callbackgroup.add_argument("--callback","-call", help="Pass the path to a program/script that will be called on each new measurement")
+callbackgroup.add_argument("--json", help="json",action='store_true')
 callbackgroup.add_argument("--httpcallback","-http", help="Pass the URL to a program/script that will be called on each new measurement")
 callbackgroup.add_argument("--name","-n", help="Give this sensor a name reported to the callback script")
 callbackgroup.add_argument("--skipidentical","-skip", help="N consecutive identical measurements won't be reported to callbackfunction",metavar='N', type=int, default=0)
