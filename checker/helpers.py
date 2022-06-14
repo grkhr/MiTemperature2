@@ -24,10 +24,16 @@ def logs_stat():
     ts = time.time()
     with db.session() as sess:
         lines = sess.query(models.MHData.id).count()
-    ts = time.time() - ts
+    count_time = time.time() - ts
+
+    ts = time.time()
+    with db.session() as sess:
+        sess.query(models.MHData).order_by(models.MHData.timestamp.desc()).limit(1).first()
+    last_line_time = time.time() - ts
     return {
         'lines': lines,
-        'parsing_time': f'{round(1000 * ts)}ms'
+        'count_time': f'{round(1000 * count_time)}ms',
+        'last_line_time': f'{round(1000 * last_line_time)}ms'
     }
     # if os.path.exists(FILENAME):
     #     size = os.path.getsize(FILENAME)
