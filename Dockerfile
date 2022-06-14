@@ -9,14 +9,15 @@ RUN apt-get update && \
 
 RUN apt-get -y --no-install-recommends install libglib2.0-dev
 
-COPY . .
+WORKDIR /app
+ADD ./requirements.txt /srv/requirements.txt
+RUN pip install -r requirements.txt
+
+ADD . /app
 
 RUN python --version
 RUN pip --version
 
-RUN pip install bluepy requests
-RUN pip install -r requirements.txt
-
 RUN service dbus start
 
-ENTRYPOINT python run.py
+ENTRYPOINT cd app && python run.py

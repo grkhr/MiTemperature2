@@ -4,3 +4,5 @@ pandas
 sqlalchemy
 psycopg2-binary==2.9.3
 #psycopg2==2.9.3
+bluepy
+requests
