@@ -1,7 +1,5 @@
 FROM python:3.9-slim AS mi2
 
-
-
 ENV LANG C.UTF-8
 ENV PYTHONUNBUFFERED=1
 

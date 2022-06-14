@@ -11,6 +11,14 @@ import telebot
 import json
 import os
 import helpers
+import models
+import db
+
+models.create_all()
+with db.session() as sess:
+    row = json.loads(obj)
+    sess.add(models.MHData(**row))
+    sess.commit()
 
 bot = telebot.TeleBot(os.getenv('TELEGRAM_BOT_TOKEN'))
 
