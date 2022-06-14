@@ -66,7 +66,7 @@ def format_state(state):
         return 'NONE'
     
     dtm = stringify_ts(state['timestamp'])
-    diff = datetime.datetime.utcnow().timestamp() - state['timestamp']
+    diff = datetime.datetime.utcnow().timestamp() - state['timestamp'].timestamp()
     if diff > 60:
         dtm = f'❗️ outdated by {round(diff / 60)} mins ❗️\n{dtm}'
     text = [
