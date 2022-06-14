@@ -21,18 +21,26 @@ def sizeof_fmt(num, suffix="B"):
     return f"{num:.1f}Yi{suffix}"
 
 def logs_stat():
-    if os.path.exists(FILENAME):
-        size = os.path.getsize(FILENAME)
-        size = sizeof_fmt(size)
-        ts = time.time()
-        with open(FILENAME) as f:
-            lines = len(f.readlines())
-        ts = time.time() - ts
-        return {
-            'size': size,
-            'lines': lines,
-            'parsing_time': f'{round(1000 * ts)}ms'
-        }
+    ts = time.time()
+    with db.session() as sess:
+        lines = sess.query(models.MHData.id).count()
+    ts = time.time() - ts
+    return {
+        'lines': lines,
+        'parsing_time': f'{round(1000 * ts)}ms'
+    }
+    # if os.path.exists(FILENAME):
+    #     size = os.path.getsize(FILENAME)
+    #     size = sizeof_fmt(size)
+    #     ts = time.time()
+    #     with open(FILENAME) as f:
+    #         lines = len(f.readlines())
+    #     ts = time.time() - ts
+    #     return {
+    #         'size': size,
+    #         'lines': lines,
+    #         'parsing_time': f'{round(1000 * ts)}ms'
+    #     }
 
 
 def find_state(idx):
