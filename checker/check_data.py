@@ -40,15 +40,24 @@ if current_state['humidity'] > config['max_humidity']['value'] and last_state['h
     text = f"💧 Humidity is {current_state['humidity']}%"
     bot.send_message(os.getenv('CHAT_ID'), text)
 
-
-# min_temperature
+# min_temperature alert
 if current_state['temperature'] < config['min_temperature']['value'] and last_state['temperature'] >= config['min_temperature']['value']:
     text = f"🥶 Temperature is {current_state['temperature']}°C"
     bot.send_message(os.getenv('CHAT_ID'), text)
 
-# max_temperature
+# min_temperature ok
+if current_state['temperature'] >= config['min_temperature']['value'] and last_state['temperature'] < config['min_temperature']['value']:
+    text = f"👌 Temperature is {current_state['temperature']}°C"
+    bot.send_message(os.getenv('CHAT_ID'), text)
+
+# max_temperature alert
 if current_state['temperature'] > config['max_temperature']['value'] and last_state['temperature'] <= config['max_temperature']['value']:
     text = f"🥵 Temperature is {current_state['temperature']}°C"
+    bot.send_message(os.getenv('CHAT_ID'), text)
+
+# max_temperature ok
+if current_state['temperature'] <= config['max_temperature']['value'] and last_state['temperature'] > config['max_temperature']['value']:
+    text = f"👌 Temperature is {current_state['temperature']}°C"
     bot.send_message(os.getenv('CHAT_ID'), text)
 
 print('checked')
