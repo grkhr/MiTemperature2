@@ -27,8 +27,8 @@ bot = telebot.TeleBot(os.getenv('TELEGRAM_BOT_TOKEN'))
 with open('config.json') as f:
     config = json.loads(f.read())
 
-last_state = helpers.find_state(-2)
-current_state = helpers.find_state(-1)
+last_state = helpers.find_state(1)
+current_state = helpers.find_state(0)
 
 # min_humidity
 if current_state['humidity'] < config['min_humidity']['value'] and last_state['humidity'] >= config['min_humidity']['value']:

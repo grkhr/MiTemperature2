@@ -29,7 +29,7 @@ def init_markup(buttons, row_width=1):
 
 @bot.message_handler(commands=['current'])
 def current(message):
-    current = helpers.find_state(-1)
+    current = helpers.find_state(0)
     text = helpers.format_state(current)
     return bot.reply_to(message, text)
 

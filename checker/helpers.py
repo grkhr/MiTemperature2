@@ -2,11 +2,15 @@ import os
 import json
 import datetime
 import time
+import db
+import models
 
 FILENAME = 'data.jsonl'
 
 def stringify_ts(ts):
-    return datetime.datetime.fromtimestamp(ts).strftime('%d %b %H:%M')
+    if isinstance(ts, int):
+        ts = datetime.datetime.fromtimestamp(ts)
+    return ts.strftime('%d %b %H:%M')
 
 
 def sizeof_fmt(num, suffix="B"):
@@ -32,16 +36,14 @@ def logs_stat():
 
 
 def find_state(idx):
-    if os.path.exists(FILENAME):
-        with open(FILENAME) as f:
-            state = f.readlines()[idx]
-        return json.loads(state)
+    with db.session() as sess:
+        obj = sess.query(models.MHData).order_by(models.MHData.timestamp.desc()).limit(1).offset(idx).first()
+    return obj.__dict__
 
 def find_last_n_states(n):
-    if os.path.exists(FILENAME):
-        with open(FILENAME) as f:
-            states = f.readlines()[-n:]
-        return [json.loads(i) for i in states]
+    with db.session() as sess:
+        objs = sess.query(models.MHData).order_by(models.MHData.timestamp.desc()).limit(n).all()
+    return [i.__dict__ for i in objs]
 
 
 
