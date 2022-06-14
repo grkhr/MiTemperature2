@@ -30,7 +30,7 @@ class MHData(BaseModified, Base):
     temperature = sa.Column(sa.Numeric(precision=4, scale=1))
     humidity = sa.Column(sa.Integer)
     voltage = sa.Column(sa.Numeric(precision=5, scale=3))
-    timestamp = ts = sa.Column(sa.DateTime(timezone=False), default=datetime.datetime.utcnow)
+    timestamp = sa.Column(sa.DateTime(timezone=False), default=datetime.datetime.utcnow)
 
 
 def create_all():

@@ -12,7 +12,7 @@ This file explains very detailed about the usage and covers everything you need 
 
 """
 
-print(readme)
+#print(readme)
 
 
 from bluepy import btle

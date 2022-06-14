@@ -9,8 +9,10 @@ services:
     network_mode: "host"
     restart: always
   db:
-    image: postgres:14.1-alpine
+    image: postgres:13.7
     restart: always
+    command: postgres -c password_encryption=md5
+    platform: linux/arm64/v8
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres

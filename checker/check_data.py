@@ -13,10 +13,12 @@ import os
 import helpers
 import models
 import db
+import datetime
 
 models.create_all()
 with db.session() as sess:
     row = json.loads(obj)
+    row['timestamp'] = datetime.datetime.fromtimestamp(row['timestamp'])
     sess.add(models.MHData(**row))
     sess.commit()
 
