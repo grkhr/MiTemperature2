@@ -10,7 +10,7 @@ RUN apt-get update && \
 RUN apt-get -y --no-install-recommends install libglib2.0-dev
 
 WORKDIR /app
-ADD ./requirements.txt /srv/requirements.txt
+ADD ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt
 
 ADD . /app
@@ -19,5 +19,6 @@ RUN python --version
 RUN pip --version
 
 RUN service dbus start
+RUN pwd
 
-ENTRYPOINT cd app && python run.py
+ENTRYPOINT cd /app && python run.py
