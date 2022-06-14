@@ -64,7 +64,11 @@ def find_last_n_states(n):
 def format_state(state):
     if state is None:
         return 'NONE'
+    
     dtm = stringify_ts(state['timestamp'])
+    diff = datetime.datetime.utcnow().timestamp() - state['timestamp']
+    if diff > 60:
+        dtm = f'❗️ outdated by {round(diff / 60)} mins ❗️\n{dtm}'
     text = [
         f"{dtm} UTC",
         f"{state['temperature']}°C - temperature",
