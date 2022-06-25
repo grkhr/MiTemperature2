@@ -5,3 +5,5 @@ __pycache__/
 .env
 data.jsonl
 pg
+.DS_Store
+checker/.DS_Store

@@ -4,10 +4,9 @@ ENV LANG C.UTF-8
 ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && \
-	apt-get install gcc build-essential dbus -y && \
+	apt-get install gcc build-essential dbus net-tools libglib2.0-dev -y && \
 	apt-get clean
-
-RUN apt-get -y --no-install-recommends install libglib2.0-dev
+# RUN apt-get -y --no-install-recommends install libglib2.0-dev
 
 WORKDIR /app
 ADD ./requirements.txt /app/requirements.txt
@@ -15,10 +14,6 @@ RUN pip install -r requirements.txt
 
 ADD . /app
 
-RUN python --version
-RUN pip --version
-
 RUN service dbus start
-RUN pwd
 
 ENTRYPOINT cd /app && python run.py

@@ -6,6 +6,7 @@ import pandas as pd
 import json
 import pprint
 import os
+import socket
 
 import helpers
 
@@ -16,9 +17,17 @@ COMMANDS = {
     'get_config': 'get_config',
     'change_config': 'change config',
     'last_logs': 'last_logs',
-    'logs_stat': 'logs_stat'
+    'logs_stat': 'logs_stat',
+    'get_ip': 'get_ip',
 }
 bot.set_my_commands([telebot.types.BotCommand(k, v) for k, v in COMMANDS.items()])
+
+def get_current_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip = s.getsockname()[0]
+    s.close()
+    return ip
 
 def init_markup(buttons, row_width=1):
     markup = telebot.types.InlineKeyboardMarkup(row_width=row_width)
@@ -61,6 +70,10 @@ def get_config(message):
     config = {k:v['value'] for k, v in config.items()}
     return bot.reply_to(message, f'`{pprint.pformat(config, sort_dicts=False, indent=1, width=1)}`', parse_mode='markdown')
 
+@bot.message_handler(commands=['get_ip'])
+def send_ip(message):
+    ip = get_current_ip()
+    return bot.reply_to(message, f'`{ip}`', parse_mode='markdown')
 
 @bot.message_handler(commands=['change_config'])
 def start_change_config(message):
