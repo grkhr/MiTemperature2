@@ -6,9 +6,34 @@ import pandas as pd
 import json
 import pprint
 import os
+from miio import chuangmi_plug
 import socket
 
 import helpers
+
+from functools import wraps
+
+
+KNOWN_CHAT_IDS = [104327226, 149021256]
+
+
+def private_access():
+    """
+    Restrict access to the command to users allowed by the is_known_username function.
+    """
+    def deco_restrict(f):
+
+        @wraps(f)
+        def f_restrict(message, *args, **kwargs):
+            if message.chat.id in KNOWN_CHAT_IDS:
+                return f(message, *args, **kwargs)
+            else:
+                bot.reply_to(message, text='Who are you?  Keep on walking...')
+
+        return f_restrict  # true decorator
+
+    return deco_restrict
+
 
 bot = telebot.TeleBot(os.getenv('TELEGRAM_BOT_TOKEN'))
 
@@ -19,6 +44,9 @@ COMMANDS = {
     'last_logs': 'last_logs',
     'logs_stat': 'logs_stat',
     'get_ip': 'get_ip',
+    'plug_on': 'plug_on',
+    'plug_off': 'plug_off',
+    'plug_status': 'plug_status',
 }
 bot.set_my_commands([telebot.types.BotCommand(k, v) for k, v in COMMANDS.items()])
 
@@ -37,12 +65,14 @@ def init_markup(buttons, row_width=1):
 
 
 @bot.message_handler(commands=['current'])
+@private_access()
 def current(message):
     current = helpers.find_state(0)
     text = helpers.format_state(current)
     return bot.reply_to(message, text)
 
 @bot.message_handler(commands=['last_logs'])
+@private_access()
 def get_config(message):
     ls = helpers.find_last_n_states(10)
     ls = [
@@ -57,6 +87,7 @@ def get_config(message):
     return bot.reply_to(message, f'`{ls}`', parse_mode='markdown')
 
 @bot.message_handler(commands=['logs_stat'])
+@private_access()
 def send_logs_stat(message):
     stat = helpers.logs_stat()
     print(stat)
@@ -64,6 +95,7 @@ def send_logs_stat(message):
 
 
 @bot.message_handler(commands=['get_config'])
+@private_access()
 def get_config(message):
     with open('config.json') as f:
         config = json.loads(f.read())
@@ -71,11 +103,28 @@ def get_config(message):
     return bot.reply_to(message, f'`{pprint.pformat(config, sort_dicts=False, indent=1, width=1)}`', parse_mode='markdown')
 
 @bot.message_handler(commands=['get_ip'])
+@private_access()
 def send_ip(message):
     ip = get_current_ip()
     return bot.reply_to(message, f'`{ip}`', parse_mode='markdown')
 
+
+@bot.message_handler(commands=['plug_on', 'plug_off', 'plug_status'])
+@private_access()
+def plug_controller(message):
+    plug = chuangmi_plug.ChuangmiPlug(os.getenv('PLUG_IP'), os.getenv('PLUG_TOKEN'))
+    if message.text == '/plug_on':
+        plug.on()
+        return bot.reply_to(message, 'Plug on')
+    if message.text == '/plug_off':
+        plug.off()
+        return bot.reply_to(message, 'Plug off')
+    if message.text == '/plug_status':
+        return bot.reply_to(message, 'Plug status:\n is_on ' + str(plug.status().is_on))
+    return
+
 @bot.message_handler(commands=['change_config'])
+@private_access()
 def start_change_config(message):
     with open('config.json') as f:
         config = json.loads(f.read())
