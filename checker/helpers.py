@@ -13,6 +13,11 @@ def stringify_ts(ts):
     return ts.strftime('%d %b %H:%M')
 
 
+def get_devices():
+    with db.session() as sess:
+        objs = sess.query(models.MHDevice).all()
+    return objs
+
 def sizeof_fmt(num, suffix="B"):
     for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
         if abs(num) < 1024.0:
@@ -49,14 +54,16 @@ def logs_stat():
     #     }
 
 
-def find_state(idx):
+def find_state(idx, sensorname):
     with db.session() as sess:
-        obj = sess.query(models.MHData).order_by(models.MHData.timestamp.desc()).limit(1).offset(idx).first()
+        obj = sess.query(models.MHData).filter(models.MHData.sensorname == sensorname) \
+            .order_by(models.MHData.timestamp.desc()).limit(1).offset(idx).first()
     return obj.__dict__
 
-def find_last_n_states(n):
+def find_last_n_states(n, sensorname):
     with db.session() as sess:
-        objs = sess.query(models.MHData).order_by(models.MHData.timestamp.desc()).limit(n).all()
+        objs = sess.query(models.MHData).filter(models.MHData.sensorname == sensorname) \
+            .order_by(models.MHData.timestamp.desc()).limit(n).all()
     return [i.__dict__ for i in objs]
 
 

@@ -41,7 +41,7 @@ COMMANDS = {
     'current': 'current',
     'get_config': 'get_config',
     'change_config': 'change config',
-    'last_logs': 'last_logs',
+    # 'last_logs': 'last_logs',
     'logs_stat': 'logs_stat',
     'get_ip': 'get_ip',
     'plug_on': 'plug_on',
@@ -67,24 +67,28 @@ def init_markup(buttons, row_width=1):
 @bot.message_handler(commands=['current'])
 @private_access()
 def current(message):
-    current = helpers.find_state(0)
-    text = helpers.format_state(current)
-    return bot.reply_to(message, text)
+    send = []
+    objs = helpers.get_devices()
+    for obj in objs:
+        current = helpers.find_state(0, objs.sensorname)
+        text = objs.sensortitle + '\n' + helpers.format_state(current)
+        send.append(text)
+    return bot.reply_to(message, '\n\n'.join(send))
 
-@bot.message_handler(commands=['last_logs'])
-@private_access()
-def get_config(message):
-    ls = helpers.find_last_n_states(10)
-    ls = [
-        [
-            helpers.stringify_ts(i['timestamp']), 
-            str(i['temperature']), 
-            str(i['humidity'])
-        ] 
-        for i in ls
-    ]
-    ls = '\n'.join([' '.join(i) for i in ls])
-    return bot.reply_to(message, f'`{ls}`', parse_mode='markdown')
+# @bot.message_handler(commands=['last_logs'])
+# @private_access()
+# def get_config(message):
+#     ls = helpers.find_last_n_states(10)
+#     ls = [
+#         [
+#             helpers.stringify_ts(i['timestamp']), 
+#             str(i['temperature']), 
+#             str(i['humidity'])
+#         ] 
+#         for i in ls
+#     ]
+#     ls = '\n'.join([' '.join(i) for i in ls])
+#     return bot.reply_to(message, f'`{ls}`', parse_mode='markdown')
 
 @bot.message_handler(commands=['logs_stat'])
 @private_access()
