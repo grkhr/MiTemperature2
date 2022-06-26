@@ -60,7 +60,7 @@ for obj in objs:
 
     # max_temperature ok
     if current_state['temperature'] <= config['max_temperature']['value'] and last_state['temperature'] > config['max_temperature']['value']:
-        text = obj.sensortitle + '\n' + f"👌 Temperature is {current_state['temperature']}°C"
+        text = obj.sensortitle.upper() + '\n' + f"👌 Temperature is {current_state['temperature']}°C"
         bot.send_message(os.getenv('CHAT_ID'), text)
 
 print('checked')
