@@ -37,7 +37,7 @@ class MHData(BaseModified, Base):
 class MHDevice(BaseModified, Base):
     __tablename__ = 'mhdevice'
     __table_args__ = {'extend_existing': True}
-    sensorname = sa.Column(sa.String(50))
+    sensorname = sa.Column(sa.String(50), primary_key=True)
     sensortitle = sa.Column(sa.String(50))
 
 def create_all():
