@@ -22,6 +22,7 @@ class BaseModified:
                 setattr(self, k, kwargs[k])
         return
 
+
 class MHData(BaseModified, Base):
     __tablename__ = 'mhdata'
     __table_args__ = {'extend_existing': True}
@@ -32,6 +33,12 @@ class MHData(BaseModified, Base):
     voltage = sa.Column(sa.Numeric(precision=5, scale=3))
     timestamp = sa.Column(sa.DateTime(timezone=False), default=datetime.datetime.utcnow)
 
+
+class MHDevice(BaseModified, Base):
+    __tablename__ = 'mhdevice'
+    __table_args__ = {'extend_existing': True}
+    sensorname = sa.Column(sa.String(50))
+    sensortitle = sa.Column(sa.String(50))
 
 def create_all():
     # Base.metadata.drop_all(pg_engine)
