@@ -70,8 +70,8 @@ def current(message):
     send = []
     objs = helpers.get_devices()
     for obj in objs:
-        current = helpers.find_state(0, objs.sensorname)
-        text = objs.sensortitle + '\n' + helpers.format_state(current)
+        current = helpers.find_state(0, obj.sensorname)
+        text = obj.sensortitle + '\n' + helpers.format_state(current)
         send.append(text)
     return bot.reply_to(message, '\n\n'.join(send))
 
