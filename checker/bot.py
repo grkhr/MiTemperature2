@@ -152,11 +152,10 @@ def change_config(callback):
     msg = bot.send_message(callback.message.chat.id, f'Type value for {callback.data}:')
     bot.register_next_step_handler(msg, lambda m: set_config(m, callback.data))
     
-
-try:
-    print('trying poll...')
-    bot.infinity_polling()
-except Exception as e:
-    print(e)
-    time.sleep(20)
-
+while True:
+    try:
+        print('trying poll...')
+        bot.infinity_polling()
+    except Exception as e:
+        print(e)
+        time.sleep(20)
