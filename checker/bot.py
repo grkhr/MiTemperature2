@@ -8,6 +8,7 @@ import pprint
 import os
 from miio import chuangmi_plug
 import socket
+import time
 
 import helpers
 
@@ -152,5 +153,10 @@ def change_config(callback):
     bot.register_next_step_handler(msg, lambda m: set_config(m, callback.data))
     
 
-bot.infinity_polling()
+try:
+    print('trying poll...')
+    bot.infinity_polling()
+except Exception as e:
+    print(e)
+    time.sleep(20)
 
