@@ -389,6 +389,14 @@ passivegroup.add_argument("--rssi","-rs", help="Report RSSI via callback",action
 
 
 args=parser.parse_args()
+print('------------------------------------------------------')
+print('------------------------------------------------------')
+print('------------------------------------------------------')
+print(args)
+print('------------------------------------------------------')
+print('------------------------------------------------------')
+print('------------------------------------------------------')
+
 
 if args.devicelistfile or args.mqttconfigfile:
 	import configparser
